@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>388008 PKI Repository & CPS</title>
+  <title>XiaobaPhage PKI Repository & CPS</title>
   <style>
     :root {
       --bg: #ffffff;
@@ -304,6 +304,36 @@
       return { role, subject, issuer, serial, notBefore, notAfter, sigAlg, eku, cdp, aia };
     }
 
+    function normDateKey(s) {
+      if (!s) return '';
+      const clean = String(s).replace('Z', '');
+      if (clean.length === 12) {
+        const yy = parseInt(clean.slice(0, 2), 10);
+        return String(yy >= 50 ? 1900 + yy : 2000 + yy) + clean.slice(2);
+      }
+      return clean;
+    }
+
+    const CRL_REASONS = {
+      0: 'unspecified (未指定)',
+      1: 'keyCompromise (密钥泄露)',
+      2: 'cACompromise (CA 泄露)',
+      3: 'affiliationChanged (归属变更)',
+      4: 'superseded (已被取代)',
+      5: 'cessationOfOperation (停止运营)',
+      6: 'certificateHold (证书挂起)',
+      8: 'removeFromCRL (从 CRL 移除)',
+      9: 'privilegeWithdrawn (权限撤回)',
+      10: 'aACompromise (AA 泄露)'
+    };
+
+    function getRevReason(item) {
+      if (!item || !Array.isArray(item.ext)) return '未注明';
+      const r = item.ext.find(e => e && e.extname === 'cRLReason');
+      if (!r || r.code === undefined || r.code === null) return '未注明';
+      return CRL_REASONS[r.code] || `code ${r.code}`;
+    }
+
     function parseCrl(pem) {
       const c = new X509CRL(pem);
       const issuerObj = c.getIssuer();
@@ -312,11 +342,23 @@
       const nextUpdate = fmtDate(c.getNextUpdate());
       const sigAlg = c.getSignatureAlgorithmField();
       let revokedCount = 0;
+      let recentRevoked = [];
       try {
         const list = c.getRevCertArray();
-        revokedCount = Array.isArray(list) ? list.length : 0;
+        if (Array.isArray(list)) {
+          revokedCount = list.length;
+          recentRevoked = list
+            .map(item => ({
+              serial: (item && item.sn && item.sn.hex ? item.sn.hex : '').toUpperCase(),
+              dateStr: fmtDate(item && item.date ? item.date : ''),
+              reason: getRevReason(item),
+              sortKey: normDateKey(item && item.date ? item.date : '')
+            }))
+            .sort((a, b) => b.sortKey.localeCompare(a.sortKey))
+            .slice(0, 3);
+        }
       } catch (e) { }
-      return { issuer, thisUpdate, nextUpdate, sigAlg, revokedCount };
+      return { issuer, thisUpdate, nextUpdate, sigAlg, revokedCount, recentRevoked };
     }
 
     function renderTimestampsRow(timestamps) {
@@ -361,6 +403,9 @@
 
     function renderCrlCard(item, info) {
       const fullUrl = `${location.origin}/pki/${encodeURIComponent(item.name)}`;
+      const revokedHtml = info.recentRevoked && info.recentRevoked.length
+        ? `<tr><td class="k">最近吊销序列号</td><td class="v">${info.recentRevoked.map(r => `${esc(r.serial)} <span class="meta">(${esc(r.dateStr)} · 原因: ${esc(r.reason)})</span>`).join('<br>')}${info.revokedCount > 3 ? `<div class="meta" style="margin-top:4px;">仅显示最近 3 条（共 ${info.revokedCount} 条）</div>` : ''}</td></tr>`
+        : '';
       return `
         <div class="item">
           <div class="item-head">
@@ -376,6 +421,7 @@
             <tr><td class="k">下次更新</td><td class="v">${esc(info.nextUpdate)}</td></tr>
             <tr><td class="k">签名算法</td><td class="v">${esc(info.sigAlg)}</td></tr>
             <tr><td class="k">分发 URI</td><td class="v">${esc(fullUrl.replace(/^https:/, 'http:'))}</td></tr>
+            ${revokedHtml}
             ${renderTimestampsRow(item.timestamps)}
           </table>
         </div>`;
