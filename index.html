@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,6 +16,7 @@
       --ok: #1a7f37;
       --warn: #9a6700;
     }
+
     @media (prefers-color-scheme: dark) {
       :root {
         --bg: #0d1117;
@@ -27,7 +29,11 @@
         --warn: #d29922;
       }
     }
-    * { box-sizing: border-box; }
+
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
       background: var(--bg);
@@ -38,7 +44,13 @@
       padding: 28px 18px 60px;
       font-size: 14px;
     }
-    h1 { font-size: 22px; margin: 0 0 6px; font-weight: 600; }
+
+    h1 {
+      font-size: 22px;
+      margin: 0 0 6px;
+      font-weight: 600;
+    }
+
     h2 {
       font-size: 16px;
       margin: 28px 0 12px;
@@ -46,10 +58,25 @@
       border-bottom: 1px solid var(--border);
       font-weight: 600;
     }
-    p { margin: 6px 0; }
-    .meta { color: var(--muted); font-size: 13px; }
-    a { color: var(--accent); text-decoration: none; }
-    a:hover { text-decoration: underline; }
+
+    p {
+      margin: 6px 0;
+    }
+
+    .meta {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
     .notice {
       background: var(--card-bg);
       border: 1px solid var(--border);
@@ -57,12 +84,14 @@
       border-radius: 4px;
       margin: 14px 0;
     }
+
     .item {
       border: 1px solid var(--border);
       border-radius: 4px;
       margin-bottom: 12px;
       background: var(--bg);
     }
+
     .item-head {
       background: var(--card-bg);
       padding: 8px 12px;
@@ -73,7 +102,12 @@
       align-items: center;
       gap: 8px;
     }
-    .item-title { font-weight: 600; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+
+    .item-title {
+      font-weight: 600;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+
     .badge {
       display: inline-block;
       font-size: 12px;
@@ -85,31 +119,61 @@
       margin-left: 6px;
       font-weight: normal;
     }
-    .badge.ok { color: var(--ok); border-color: var(--ok); }
-    .badge.warn { color: var(--warn); border-color: var(--warn); }
+
+    .badge.ok {
+      color: var(--ok);
+      border-color: var(--ok);
+    }
+
+    .badge.warn {
+      color: var(--warn);
+      border-color: var(--warn);
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
       font-size: 13px;
     }
+
     td {
       padding: 6px 12px;
       border-bottom: 1px solid var(--border);
       vertical-align: top;
     }
-    tr:last-child td { border-bottom: none; }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
     td.k {
       width: 150px;
       color: var(--muted);
       white-space: nowrap;
     }
+
     td.v {
       font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
       word-break: break-all;
     }
-    .uri-list { margin: 0; padding-left: 16px; }
-    .status-bar { color: var(--muted); font-size: 13px; margin-top: 8px; }
-    .ts-links { display: flex; flex-wrap: wrap; gap: 6px; }
+
+    .uri-list {
+      margin: 0;
+      padding-left: 16px;
+    }
+
+    .status-bar {
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 8px;
+    }
+
+    .ts-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
     .ts-pill {
       display: inline-block;
       padding: 2px 8px;
@@ -121,24 +185,33 @@
     }
   </style>
 </head>
+
 <body>
   <header>
     <h1>388008 Private PKI Repository</h1>
-    <div class="meta">域名：pki.388008.xyz &nbsp;|&nbsp; 策略 OID：2.5.29.32.0 &nbsp;|&nbsp; <span id="updated-at">正在加载清单...</span></div>
+    <div class="meta">域名：pki.388008.xyz &nbsp;|&nbsp; 策略 OID：2.5.29.32.0 &nbsp;|&nbsp; <span
+        id="updated-at">正在加载清单...</span></div>
   </header>
 
   <div class="notice">
-    <strong>认证业务声明（CPS）摘要：</strong>本仓库用于分发 <code>xiaobaphage</code> 个人私有公钥基础设施（PKI）的根证书、中间颁发机构证书及证书吊销列表（CRL），仅限个人代码签名、S/MIME 电子邮件数字签名及内部服务认证使用，不对外提供商业信任担保。
+    <strong>认证业务声明（CPS）摘要：</strong>本仓库用于分发 <code>xiaobaphage</code>
+    个人私有公钥基础设施（PKI）的根证书、中间颁发机构证书及证书吊销列表（CRL），仅限个人代码签名、S/MIME 电子邮件数字签名及内部服务认证使用，不对外提供商业信任担保。
   </div>
 
   <h2>CA 证书（Certificates）</h2>
-  <div id="cert-list"><p class="meta">正在解析 /pki/ 目录下的证书...</p></div>
+  <div id="cert-list">
+    <p class="meta">正在解析 /pki/ 目录下的证书...</p>
+  </div>
 
   <h2>证书吊销列表（CRL）</h2>
-  <div id="crl-list"><p class="meta">正在解析 /pki/ 目录下的吊销列表...</p></div>
+  <div id="crl-list">
+    <p class="meta">正在解析 /pki/ 目录下的吊销列表...</p>
+  </div>
 
   <h2>可信时间戳与完整性清单（RFC 3161）</h2>
-  <div id="ts-summary"><p class="meta">正在加载可信时间戳信息...</p></div>
+  <div id="ts-summary">
+    <p class="meta">正在加载可信时间戳信息...</p>
+  </div>
 
   <h2>快速验证命令</h2>
   <div class="notice" style="font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 13px;">
@@ -211,30 +284,30 @@
         if (bc && bc.cA) {
           role = (subject === issuer) ? 'Root CA' : 'Intermediate CA';
         }
-      } catch (e) {}
+      } catch (e) { }
 
       let eku = [];
-      try { eku = x.getExtExtKeyUsageName() || []; } catch (e) {}
+      try { eku = x.getExtExtKeyUsageName() || []; } catch (e) { }
 
       let cdp = [];
       try {
         const rawCdp = x.getExtCRLDistributionPointsURI();
         if (Array.isArray(rawCdp)) cdp = rawCdp;
-      } catch (e) {}
+      } catch (e) { }
 
       let aia = [];
       try {
         const rawAia = x.getExtAIAInfo();
         if (rawAia && Array.isArray(rawAia.caissuer)) aia = rawAia.caissuer;
-      } catch (e) {}
+      } catch (e) { }
 
       return { role, subject, issuer, serial, notBefore, notAfter, sigAlg, eku, cdp, aia };
     }
 
     function parseCrl(pem) {
-      const c = new X509CRL();
-      c.readCRLPEM(pem);
-      const issuer = c.getIssuerString();
+      const c = new X509CRL(pem);
+      const issuerObj = c.getIssuer();
+      const issuer = (issuerObj && issuerObj.str) ? issuerObj.str : '-';
       const thisUpdate = fmtDate(c.getThisUpdate());
       const nextUpdate = fmtDate(c.getNextUpdate());
       const sigAlg = c.getSignatureAlgorithmField();
@@ -242,7 +315,7 @@
       try {
         const list = c.getRevCertArray();
         revokedCount = Array.isArray(list) ? list.length : 0;
-      } catch (e) {}
+      } catch (e) { }
       return { issuer, thisUpdate, nextUpdate, sigAlg, revokedCount };
     }
 
@@ -385,4 +458,5 @@
     init();
   </script>
 </body>
+
 </html>
