@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-11-26 14:21:42 +08:00",
-  "releaseTag": "2026-11-26.3",
+  "updatedAt": "2026-11-26 14:30:21 +08:00",
+  "releaseTag": "2026-11-26.4",
   "files": [
     {
       "name": "xiaobaphage_emailinterca.cer",
@@ -212,7 +212,7 @@
         "tsa": "digicert",
         "label": "DigiCert",
         "tsrUrl": "./pki/timestamps/SHA256SUMS.txt.digicert.tsr",
-        "tsrSize": 6007,
+        "tsrSize": 6006,
         "tsqUrl": "./pki/timestamps/SHA256SUMS.txt.digicert.tsq",
         "tsqSize": 69
       },
@@ -222,7 +222,7 @@
         "tsrUrl": "./pki/timestamps/SHA256SUMS.txt.sectigo.tsr",
         "tsrSize": 6636,
         "tsqUrl": "./pki/timestamps/SHA256SUMS.txt.sectigo.tsq",
-        "tsqSize": 69
+        "tsqSize": 70
       },
       {
         "tsa": "freetsa",
@@ -230,15 +230,15 @@
         "tsrUrl": "./pki/timestamps/SHA256SUMS.txt.freetsa.tsr",
         "tsrSize": 4643,
         "tsqUrl": "./pki/timestamps/SHA256SUMS.txt.freetsa.tsq",
-        "tsqSize": 70
+        "tsqSize": 69
       },
       {
         "tsa": "globalsign",
         "label": "GlobalSign",
         "tsrUrl": "./pki/timestamps/SHA256SUMS.txt.globalsign.tsr",
-        "tsrSize": 7661,
+        "tsrSize": 7660,
         "tsqUrl": "./pki/timestamps/SHA256SUMS.txt.globalsign.tsq",
-        "tsqSize": 70
+        "tsqSize": 69
       }
     ]
   }
