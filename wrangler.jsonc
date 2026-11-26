@@ -1,0 +1,14 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "pki-388008",
+  "compatibility_date": "2025-01-01",
+  "assets": {
+    "directory": "."
+  },
+  "routes": [
+    {
+      "pattern": "pki.388008.xyz",
+      "custom_domain": true
+    }
+  ]
+}
