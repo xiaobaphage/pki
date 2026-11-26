@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-11-26 14:12:10 +08:00",
-  "releaseTag": "2026-11-26.2",
+  "updatedAt": "2026-11-26 14:21:42 +08:00",
+  "releaseTag": "2026-11-26.3",
   "files": [
     {
       "name": "xiaobaphage_emailinterca.cer",
@@ -20,7 +20,7 @@
           "tsa": "sectigo",
           "label": "Sectigo",
           "tsrUrl": "./pki/timestamps/xiaobaphage_emailinterca.cer.sectigo.tsr",
-          "tsrSize": 6635,
+          "tsrSize": 6636,
           "tsqUrl": "./pki/timestamps/xiaobaphage_emailinterca.cer.sectigo.tsq",
           "tsqSize": 69
         },
@@ -28,9 +28,9 @@
           "tsa": "freetsa",
           "label": "FreeTSA",
           "tsrUrl": "./pki/timestamps/xiaobaphage_emailinterca.cer.freetsa.tsr",
-          "tsrSize": 4643,
+          "tsrSize": 4644,
           "tsqUrl": "./pki/timestamps/xiaobaphage_emailinterca.cer.freetsa.tsq",
-          "tsqSize": 69
+          "tsqSize": 70
         },
         {
           "tsa": "globalsign",
@@ -46,13 +46,13 @@
       "name": "xiaobaphage_emailinterca.crl",
       "type": "crl",
       "url": "./pki/xiaobaphage_emailinterca.crl",
-      "size": 499,
+      "size": 573,
       "timestamps": [
         {
           "tsa": "digicert",
           "label": "DigiCert",
           "tsrUrl": "./pki/timestamps/xiaobaphage_emailinterca.crl.digicert.tsr",
-          "tsrSize": 6008,
+          "tsrSize": 6007,
           "tsqUrl": "./pki/timestamps/xiaobaphage_emailinterca.crl.digicert.tsq",
           "tsqSize": 70
         },
@@ -60,17 +60,17 @@
           "tsa": "sectigo",
           "label": "Sectigo",
           "tsrUrl": "./pki/timestamps/xiaobaphage_emailinterca.crl.sectigo.tsr",
-          "tsrSize": 6635,
+          "tsrSize": 6636,
           "tsqUrl": "./pki/timestamps/xiaobaphage_emailinterca.crl.sectigo.tsq",
-          "tsqSize": 69
+          "tsqSize": 70
         },
         {
           "tsa": "freetsa",
           "label": "FreeTSA",
           "tsrUrl": "./pki/timestamps/xiaobaphage_emailinterca.crl.freetsa.tsr",
-          "tsrSize": 4643,
+          "tsrSize": 4644,
           "tsqUrl": "./pki/timestamps/xiaobaphage_emailinterca.crl.freetsa.tsq",
-          "tsqSize": 69
+          "tsqSize": 70
         },
         {
           "tsa": "globalsign",
@@ -94,13 +94,13 @@
           "tsrUrl": "./pki/timestamps/xiaobaphage_rootca.cer.digicert.tsr",
           "tsrSize": 6007,
           "tsqUrl": "./pki/timestamps/xiaobaphage_rootca.cer.digicert.tsq",
-          "tsqSize": 69
+          "tsqSize": 70
         },
         {
           "tsa": "sectigo",
           "label": "Sectigo",
           "tsrUrl": "./pki/timestamps/xiaobaphage_rootca.cer.sectigo.tsr",
-          "tsrSize": 6636,
+          "tsrSize": 6635,
           "tsqUrl": "./pki/timestamps/xiaobaphage_rootca.cer.sectigo.tsq",
           "tsqSize": 69
         },
@@ -108,7 +108,7 @@
           "tsa": "freetsa",
           "label": "FreeTSA",
           "tsrUrl": "./pki/timestamps/xiaobaphage_rootca.cer.freetsa.tsr",
-          "tsrSize": 4643,
+          "tsrSize": 4644,
           "tsqUrl": "./pki/timestamps/xiaobaphage_rootca.cer.freetsa.tsq",
           "tsqSize": 69
         },
@@ -116,9 +116,9 @@
           "tsa": "globalsign",
           "label": "GlobalSign",
           "tsrUrl": "./pki/timestamps/xiaobaphage_rootca.cer.globalsign.tsr",
-          "tsrSize": 7660,
+          "tsrSize": 7661,
           "tsqUrl": "./pki/timestamps/xiaobaphage_rootca.cer.globalsign.tsq",
-          "tsqSize": 69
+          "tsqSize": 70
         }
       ]
     },
@@ -140,15 +140,15 @@
           "tsa": "sectigo",
           "label": "Sectigo",
           "tsrUrl": "./pki/timestamps/xiaobaphage_rootca.crl.sectigo.tsr",
-          "tsrSize": 6636,
+          "tsrSize": 6635,
           "tsqUrl": "./pki/timestamps/xiaobaphage_rootca.crl.sectigo.tsq",
-          "tsqSize": 70
+          "tsqSize": 69
         },
         {
           "tsa": "freetsa",
           "label": "FreeTSA",
           "tsrUrl": "./pki/timestamps/xiaobaphage_rootca.crl.freetsa.tsr",
-          "tsrSize": 4643,
+          "tsrSize": 4644,
           "tsqUrl": "./pki/timestamps/xiaobaphage_rootca.crl.freetsa.tsq",
           "tsqSize": 70
         },
@@ -166,13 +166,13 @@
       "name": "xiaobaphage_xiaobaphageemail.cer",
       "type": "cert",
       "url": "./pki/xiaobaphage_xiaobaphageemail.cer",
-      "size": 1135,
+      "size": 1188,
       "timestamps": [
         {
           "tsa": "digicert",
           "label": "DigiCert",
           "tsrUrl": "./pki/timestamps/xiaobaphage_xiaobaphageemail.cer.digicert.tsr",
-          "tsrSize": 6007,
+          "tsrSize": 6006,
           "tsqUrl": "./pki/timestamps/xiaobaphage_xiaobaphageemail.cer.digicert.tsq",
           "tsqSize": 69
         },
@@ -180,7 +180,7 @@
           "tsa": "sectigo",
           "label": "Sectigo",
           "tsrUrl": "./pki/timestamps/xiaobaphage_xiaobaphageemail.cer.sectigo.tsr",
-          "tsrSize": 6636,
+          "tsrSize": 6635,
           "tsqUrl": "./pki/timestamps/xiaobaphage_xiaobaphageemail.cer.sectigo.tsq",
           "tsqSize": 69
         },
@@ -190,15 +190,15 @@
           "tsrUrl": "./pki/timestamps/xiaobaphage_xiaobaphageemail.cer.freetsa.tsr",
           "tsrSize": 4643,
           "tsqUrl": "./pki/timestamps/xiaobaphage_xiaobaphageemail.cer.freetsa.tsq",
-          "tsqSize": 70
+          "tsqSize": 69
         },
         {
           "tsa": "globalsign",
           "label": "GlobalSign",
           "tsrUrl": "./pki/timestamps/xiaobaphage_xiaobaphageemail.cer.globalsign.tsr",
-          "tsrSize": 7661,
+          "tsrSize": 7660,
           "tsqUrl": "./pki/timestamps/xiaobaphage_xiaobaphageemail.cer.globalsign.tsq",
-          "tsqSize": 70
+          "tsqSize": 69
         }
       ]
     }
@@ -212,9 +212,9 @@
         "tsa": "digicert",
         "label": "DigiCert",
         "tsrUrl": "./pki/timestamps/SHA256SUMS.txt.digicert.tsr",
-        "tsrSize": 6008,
+        "tsrSize": 6007,
         "tsqUrl": "./pki/timestamps/SHA256SUMS.txt.digicert.tsq",
-        "tsqSize": 70
+        "tsqSize": 69
       },
       {
         "tsa": "sectigo",
@@ -228,7 +228,7 @@
         "tsa": "freetsa",
         "label": "FreeTSA",
         "tsrUrl": "./pki/timestamps/SHA256SUMS.txt.freetsa.tsr",
-        "tsrSize": 4644,
+        "tsrSize": 4643,
         "tsqUrl": "./pki/timestamps/SHA256SUMS.txt.freetsa.tsq",
         "tsqSize": 70
       },
@@ -236,9 +236,9 @@
         "tsa": "globalsign",
         "label": "GlobalSign",
         "tsrUrl": "./pki/timestamps/SHA256SUMS.txt.globalsign.tsr",
-        "tsrSize": 7660,
+        "tsrSize": 7661,
         "tsqUrl": "./pki/timestamps/SHA256SUMS.txt.globalsign.tsq",
-        "tsqSize": 69
+        "tsqSize": 70
       }
     ]
   }
