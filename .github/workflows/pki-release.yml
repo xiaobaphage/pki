@@ -1,0 +1,102 @@
+name: PKI Timestamp & Release
+
+on:
+  push:
+    branches:
+      - main
+      - master
+    paths-ignore:
+      - "pki/manifest.json"
+      - "pki/SHA256SUMS.txt"
+      - "pki/timestamps/**"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  timestamp-and-release:
+    # 防止自动提交触发循环（不使用 [skip ci]，避免 Cloudflare Pages 也跳过部署）
+    if: "!contains(github.event.head_commit.message, '[skip-actions]')"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Determine Beijing date tag
+        id: tag
+        run: |
+          BASE_DATE=$(TZ='Asia/Shanghai' date +%Y-%m-%d)
+          git fetch --tags --force
+          if ! git rev-parse -q --verify "refs/tags/${BASE_DATE}" >/dev/null; then
+            RELEASE_TAG="${BASE_DATE}"
+          else
+            IDX=1
+            while git rev-parse -q --verify "refs/tags/${BASE_DATE}.${IDX}" >/dev/null; do
+              IDX=$((IDX + 1))
+            done
+            RELEASE_TAG="${BASE_DATE}.${IDX}"
+          fi
+          echo "date=${BASE_DATE}" >> "$GITHUB_OUTPUT"
+          echo "tag=${RELEASE_TAG}" >> "$GITHUB_OUTPUT"
+          echo "Selected release tag: ${RELEASE_TAG}"
+
+      - name: Request RFC 3161 timestamps and build manifest
+        env:
+          RELEASE_TAG: ${{ steps.tag.outputs.tag }}
+        run: |
+          chmod +x scripts/build-pki.sh
+          ./scripts/build-pki.sh pki
+
+      - name: Commit timestamps and manifest back to repository
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add pki/manifest.json pki/SHA256SUMS.txt pki/timestamps/
+          if git diff --cached --quiet; then
+            echo "No generated PKI metadata changes to commit."
+          else
+            git commit -m "chore(pki): update timestamps & manifest for ${{ steps.tag.outputs.tag }} [skip-actions]"
+            git push
+          fi
+          git tag "${{ steps.tag.outputs.tag }}"
+          git push origin "${{ steps.tag.outputs.tag }}"
+
+      - name: Package release archive with date folder
+        id: pkg
+        run: |
+          TAG="${{ steps.tag.outputs.tag }}"
+          STAGE_DIR="release_stage/${TAG}"
+          mkdir -p "${STAGE_DIR}"
+          cp -r pki/* "${STAGE_DIR}/"
+
+          mkdir -p dist
+          tar -czf "dist/${TAG}.tar.gz" -C release_stage "${TAG}"
+          (cd release_stage && zip -rq "../dist/${TAG}.zip" "${TAG}")
+
+          echo "tarball=dist/${TAG}.tar.gz" >> "$GITHUB_OUTPUT"
+          echo "zipball=dist/${TAG}.zip" >> "$GITHUB_OUTPUT"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.tag.outputs.tag }}
+          name: "PKI Snapshot ${{ steps.tag.outputs.tag }}"
+          body: |
+            ## 388008 Private PKI Snapshot (`${{ steps.tag.outputs.tag }}`)
+
+            - **日期目录压缩包**：`${{ steps.tag.outputs.tag }}.zip` / `${{ steps.tag.outputs.tag }}.tar.gz`（解压后根目录为 `${{ steps.tag.outputs.tag }}/`）
+            - **包含内容**：CA/终端证书（`.cer`）、吊销列表（`.crl`）、校验清单（`SHA256SUMS.txt`）、`manifest.json` 以及多机构 RFC 3161 可信时间戳（`.tsr` / `.tsq`）
+            - **触发提交**：`${{ github.sha }}`
+          files: |
+            ${{ steps.pkg.outputs.zipball }}
+            ${{ steps.pkg.outputs.tarball }}
+            pki/*.cer
+            pki/*.crl
+            pki/SHA256SUMS.txt
+            pki/manifest.json
+            pki/timestamps/*.tsr
+            pki/timestamps/*.tsq

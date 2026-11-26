@@ -1,0 +1,47 @@
+{
+  "updatedAt": "2026-11-26 13:11:24 +08:00",
+  "releaseTag": null,
+  "files": [
+    {
+      "name": "xiaobaphage_emailinterca.cer",
+      "type": "cert",
+      "url": "./pki/xiaobaphage_emailinterca.cer",
+      "size": 1086,
+      "timestamps": []
+    },
+    {
+      "name": "xiaobaphage_emailinterca.crl",
+      "type": "crl",
+      "url": "./pki/xiaobaphage_emailinterca.crl",
+      "size": 499,
+      "timestamps": []
+    },
+    {
+      "name": "xiaobaphage_rootca.cer",
+      "type": "cert",
+      "url": "./pki/xiaobaphage_rootca.cer",
+      "size": 847,
+      "timestamps": []
+    },
+    {
+      "name": "xiaobaphage_rootca.crl",
+      "type": "crl",
+      "url": "./pki/xiaobaphage_rootca.crl",
+      "size": 418,
+      "timestamps": []
+    },
+    {
+      "name": "xiaobaphage_xiaobaphageemail.cer",
+      "type": "cert",
+      "url": "./pki/xiaobaphage_xiaobaphageemail.cer",
+      "size": 1135,
+      "timestamps": []
+    }
+  ],
+  "checksums": {
+    "name": "SHA256SUMS.txt",
+    "url": "./pki/SHA256SUMS.txt",
+    "size": 467,
+    "timestamps": []
+  }
+}

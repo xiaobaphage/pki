@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>388008 PKI Repository & CPS</title>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --fg: #1f2328;
+      --muted: #656d76;
+      --border: #d0d7de;
+      --card-bg: #f6f8fa;
+      --accent: #0969da;
+      --ok: #1a7f37;
+      --warn: #9a6700;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0d1117;
+        --fg: #e6edf3;
+        --muted: #8b949e;
+        --border: #30363d;
+        --card-bg: #161b22;
+        --accent: #58a6ff;
+        --ok: #3fb950;
+        --warn: #d29922;
+      }
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      line-height: 1.6;
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 28px 18px 60px;
+      font-size: 14px;
+    }
+    h1 { font-size: 22px; margin: 0 0 6px; font-weight: 600; }
+    h2 {
+      font-size: 16px;
+      margin: 28px 0 12px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--border);
+      font-weight: 600;
+    }
+    p { margin: 6px 0; }
+    .meta { color: var(--muted); font-size: 13px; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .notice {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      padding: 12px 14px;
+      border-radius: 4px;
+      margin: 14px 0;
+    }
+    .item {
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      margin-bottom: 12px;
+      background: var(--bg);
+    }
+    .item-head {
+      background: var(--card-bg);
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+    .item-title { font-weight: 600; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    .badge {
+      display: inline-block;
+      font-size: 12px;
+      padding: 1px 6px;
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      background: var(--bg);
+      color: var(--muted);
+      margin-left: 6px;
+      font-weight: normal;
+    }
+    .badge.ok { color: var(--ok); border-color: var(--ok); }
+    .badge.warn { color: var(--warn); border-color: var(--warn); }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    td {
+      padding: 6px 12px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    tr:last-child td { border-bottom: none; }
+    td.k {
+      width: 150px;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+    td.v {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      word-break: break-all;
+    }
+    .uri-list { margin: 0; padding-left: 16px; }
+    .status-bar { color: var(--muted); font-size: 13px; margin-top: 8px; }
+    .ts-links { display: flex; flex-wrap: wrap; gap: 6px; }
+    .ts-pill {
+      display: inline-block;
+      padding: 2px 8px;
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      background: var(--card-bg);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>388008 Private PKI Repository</h1>
+    <div class="meta">域名：pki.388008.xyz &nbsp;|&nbsp; 策略 OID：2.5.29.32.0 &nbsp;|&nbsp; <span id="updated-at">正在加载清单...</span></div>
+  </header>
+
+  <div class="notice">
+    <strong>认证业务声明（CPS）摘要：</strong>本仓库用于分发 <code>xiaobaphage</code> 个人私有公钥基础设施（PKI）的根证书、中间颁发机构证书及证书吊销列表（CRL），仅限个人代码签名、S/MIME 电子邮件数字签名及内部服务认证使用，不对外提供商业信任担保。
+  </div>
+
+  <h2>CA 证书（Certificates）</h2>
+  <div id="cert-list"><p class="meta">正在解析 /pki/ 目录下的证书...</p></div>
+
+  <h2>证书吊销列表（CRL）</h2>
+  <div id="crl-list"><p class="meta">正在解析 /pki/ 目录下的吊销列表...</p></div>
+
+  <h2>可信时间戳与完整性清单（RFC 3161）</h2>
+  <div id="ts-summary"><p class="meta">正在加载可信时间戳信息...</p></div>
+
+  <h2>快速验证命令</h2>
+  <div class="notice" style="font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 13px;">
+    # Windows 检查证书链与在线 CRL 吊销状态<br>
+    certutil -verify -urlfetch &lt;certificate.cer&gt;<br><br>
+    # 清除本地 CRL 缓存<br>
+    certutil -urlcache crl delete<br><br>
+    # 查看 RFC 3161 可信时间戳 (.tsr) 详情<br>
+    openssl ts -reply -in &lt;file.tsr&gt; -text<br><br>
+    # 校验文件与时间戳签名（需提供对应 TSA 的 CA 证书）<br>
+    openssl ts -verify -in &lt;file.tsr&gt; -data &lt;file&gt; -CAfile &lt;tsa-ca.pem&gt;
+  </div>
+
+  <!-- 引入轻量级 jsrsasign 仅用于纯本地 X.509 / CRL ASN.1 字段解析 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jsrsasign/11.1.0/jsrsasign-all-min.js"></script>
+  <script>
+    function bufToPem(buf, label) {
+      const bytes = new Uint8Array(buf);
+      const text = new TextDecoder('utf-8', { fatal: false }).decode(bytes);
+      if (text.includes('-----BEGIN ')) return text.trim();
+      let binary = '';
+      for (let i = 0; i < bytes.byteLength; i++) binary += String.fromCharCode(bytes[i]);
+      const b64 = btoa(binary).match(/.{1,64}/g).join('\n');
+      return `-----BEGIN ${label}-----\n${b64}\n-----END ${label}-----`;
+    }
+
+    function fmtDate(s) {
+      if (!s) return '-';
+      // X.509 UTCTime (YYMMDDHHMMSSZ) 或 GeneralizedTime (YYYYMMDDHHMMSSZ)
+      const clean = s.replace('Z', '');
+      let y, m, d, H, M, S;
+      if (clean.length === 12) {
+        const yy = parseInt(clean.slice(0, 2), 10);
+        y = (yy >= 50 ? 1900 + yy : 2000 + yy);
+        m = clean.slice(2, 4); d = clean.slice(4, 6);
+        H = clean.slice(6, 8); M = clean.slice(8, 10); S = clean.slice(10, 12);
+      } else if (clean.length === 14) {
+        y = clean.slice(0, 4); m = clean.slice(4, 6); d = clean.slice(6, 8);
+        H = clean.slice(8, 10); M = clean.slice(10, 12); S = clean.slice(12, 14);
+      } else {
+        return s;
+      }
+      return `${y}-${m}-${d} ${H}:${M}:${S} UTC`;
+    }
+
+    function esc(str) {
+      return String(str ?? '-').replace(/[&<>"']/g, c => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+      }[c]));
+    }
+
+    async function sha256Hex(buf) {
+      const hash = await crypto.subtle.digest('SHA-256', buf);
+      return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join(':').toUpperCase();
+    }
+
+    function parseCert(pem) {
+      const x = new X509();
+      x.readCertPEM(pem);
+      const subject = x.getSubjectString();
+      const issuer = x.getIssuerString();
+      const serial = x.getSerialNumberHex().toUpperCase();
+      const notBefore = fmtDate(x.getNotBefore());
+      const notAfter = fmtDate(x.getNotAfter());
+      const sigAlg = x.getSignatureAlgorithmField();
+
+      let role = '终端证书';
+      try {
+        const bc = x.getExtBasicConstraints();
+        if (bc && bc.cA) {
+          role = (subject === issuer) ? 'Root CA' : 'Intermediate CA';
+        }
+      } catch (e) {}
+
+      let eku = [];
+      try { eku = x.getExtExtKeyUsageName() || []; } catch (e) {}
+
+      let cdp = [];
+      try {
+        const rawCdp = x.getExtCRLDistributionPointsURI();
+        if (Array.isArray(rawCdp)) cdp = rawCdp;
+      } catch (e) {}
+
+      let aia = [];
+      try {
+        const rawAia = x.getExtAIAInfo();
+        if (rawAia && Array.isArray(rawAia.caissuer)) aia = rawAia.caissuer;
+      } catch (e) {}
+
+      return { role, subject, issuer, serial, notBefore, notAfter, sigAlg, eku, cdp, aia };
+    }
+
+    function parseCrl(pem) {
+      const c = new X509CRL();
+      c.readCRLPEM(pem);
+      const issuer = c.getIssuerString();
+      const thisUpdate = fmtDate(c.getThisUpdate());
+      const nextUpdate = fmtDate(c.getNextUpdate());
+      const sigAlg = c.getSignatureAlgorithmField();
+      let revokedCount = 0;
+      try {
+        const list = c.getRevCertArray();
+        revokedCount = Array.isArray(list) ? list.length : 0;
+      } catch (e) {}
+      return { issuer, thisUpdate, nextUpdate, sigAlg, revokedCount };
+    }
+
+    function renderTimestampsRow(timestamps) {
+      if (!Array.isArray(timestamps) || !timestamps.length) {
+        return `<tr><td class="k">可信时间戳 (TSA)</td><td class="v meta">暂无（等待 GitHub Actions 生成）</td></tr>`;
+      }
+      const pills = timestamps.map(ts => {
+        const label = esc(ts.label || ts.tsa);
+        const tsrLink = `<a href="${esc(ts.tsrUrl)}" download>${label} .tsr (${ts.tsrSize || 0} B)</a>`;
+        const tsqLink = ts.tsqUrl ? ` / <a href="${esc(ts.tsqUrl)}" download>.tsq</a>` : '';
+        return `<span class="ts-pill">${tsrLink}${tsqLink}</span>`;
+      }).join('');
+      return `<tr><td class="k">可信时间戳 (TSA)</td><td class="v"><div class="ts-links">${pills}</div></td></tr>`;
+    }
+
+    function renderCertCard(item, info, fp) {
+      const fullUrl = `${location.origin}/pki/${encodeURIComponent(item.name)}`;
+      return `
+        <div class="item">
+          <div class="item-head">
+            <div>
+              <span class="item-title">${esc(item.name)}</span>
+              <span class="badge ok">${esc(info.role)}</span>
+            </div>
+            <div><a href="${esc(item.url)}" download="${esc(item.name)}">下载文件 (${item.size} B)</a></div>
+          </div>
+          <table>
+            <tr><td class="k">颁发给 (Subject)</td><td class="v">${esc(info.subject)}</td></tr>
+            <tr><td class="k">颁发者 (Issuer)</td><td class="v">${esc(info.issuer)}</td></tr>
+            <tr><td class="k">序列号 (Serial)</td><td class="v">${esc(info.serial)}</td></tr>
+            <tr><td class="k">有效期</td><td class="v">${esc(info.notBefore)} 至 ${esc(info.notAfter)}</td></tr>
+            <tr><td class="k">签名算法</td><td class="v">${esc(info.sigAlg)}</td></tr>
+            ${info.eku.length ? `<tr><td class="k">增强密钥用法</td><td class="v">${esc(info.eku.join(', '))}</td></tr>` : ''}
+            <tr><td class="k">SHA-256 指纹</td><td class="v">${esc(fp)}</td></tr>
+            <tr><td class="k">分发 URI</td><td class="v">${esc(fullUrl.replace(/^https:/, 'http:'))}</td></tr>
+            ${info.aia.length ? `<tr><td class="k">AIA (CA Issuers)</td><td class="v">${info.aia.map(u => esc(u)).join('<br>')}</td></tr>` : ''}
+            ${info.cdp.length ? `<tr><td class="k">CDP (CRL URI)</td><td class="v">${info.cdp.map(u => esc(u)).join('<br>')}</td></tr>` : ''}
+            ${renderTimestampsRow(item.timestamps)}
+          </table>
+        </div>`;
+    }
+
+    function renderCrlCard(item, info) {
+      const fullUrl = `${location.origin}/pki/${encodeURIComponent(item.name)}`;
+      return `
+        <div class="item">
+          <div class="item-head">
+            <div>
+              <span class="item-title">${esc(item.name)}</span>
+              <span class="badge ${info.revokedCount > 0 ? 'warn' : 'ok'}">已吊销: ${info.revokedCount} 条</span>
+            </div>
+            <div><a href="${esc(item.url)}" download="${esc(item.name)}">下载 CRL (${item.size} B)</a></div>
+          </div>
+          <table>
+            <tr><td class="k">颁发者 (Issuer)</td><td class="v">${esc(info.issuer)}</td></tr>
+            <tr><td class="k">本次更新</td><td class="v">${esc(info.thisUpdate)}</td></tr>
+            <tr><td class="k">下次更新</td><td class="v">${esc(info.nextUpdate)}</td></tr>
+            <tr><td class="k">签名算法</td><td class="v">${esc(info.sigAlg)}</td></tr>
+            <tr><td class="k">分发 URI</td><td class="v">${esc(fullUrl.replace(/^https:/, 'http:'))}</td></tr>
+            ${renderTimestampsRow(item.timestamps)}
+          </table>
+        </div>`;
+    }
+
+    function renderTsSummary(manifest) {
+      const cs = manifest.checksums;
+      if (!cs) {
+        return '<p class="meta">暂无汇总校验清单与时间戳（将在下次 GitHub Actions 运行后生成）。</p>';
+      }
+      return `
+        <div class="item">
+          <div class="item-head">
+            <div>
+              <span class="item-title">${esc(cs.name)}</span>
+              ${manifest.releaseTag ? `<span class="badge ok">Tag: ${esc(manifest.releaseTag)}</span>` : ''}
+            </div>
+            <div><a href="${esc(cs.url)}" download="${esc(cs.name)}">下载校验清单 (${cs.size} B)</a></div>
+          </div>
+          <table>
+            <tr><td class="k">说明</td><td class="v">包含所有证书与 CRL 的 SHA-256 摘要，并附带多个免费 RFC 3161 TSA 的权威时间证明。</td></tr>
+            ${renderTimestampsRow(cs.timestamps)}
+          </table>
+        </div>`;
+    }
+
+    async function init() {
+      const certBox = document.getElementById('cert-list');
+      const crlBox = document.getElementById('crl-list');
+      const tsBox = document.getElementById('ts-summary');
+      const updatedEl = document.getElementById('updated-at');
+
+      try {
+        const res = await fetch(`./pki/manifest.json?t=${Date.now()}`);
+        if (!res.ok) throw new Error(`无法读取 manifest.json (HTTP ${res.status})`);
+        const manifest = await res.json();
+        updatedEl.textContent = `清单更新：${manifest.updatedAt || '-'}${manifest.releaseTag ? ` | 快照：${manifest.releaseTag}` : ''}`;
+
+        const certHtml = [];
+        const crlHtml = [];
+
+        for (const item of (manifest.files || [])) {
+          try {
+            const fRes = await fetch(`${item.url}?t=${Date.now()}`);
+            if (!fRes.ok) continue;
+            const buf = await fRes.arrayBuffer();
+
+            if (item.type === 'crl') {
+              const pem = bufToPem(buf, 'X509 CRL');
+              const info = parseCrl(pem);
+              crlHtml.push(renderCrlCard(item, info));
+            } else {
+              const pem = bufToPem(buf, 'CERTIFICATE');
+              const info = parseCert(pem);
+              const fp = await sha256Hex(buf);
+              certHtml.push({ role: info.role, html: renderCertCard(item, info, fp) });
+            }
+          } catch (e) {
+            const errCard = `<div class="item"><div class="item-head"><span class="item-title">${esc(item.name)}</span><span class="badge warn">解析异常</span></div><div style="padding:8px 12px;" class="meta">${esc(e.message)}</div></div>`;
+            if (item.type === 'crl') crlHtml.push(errCard);
+            else certHtml.push({ role: 'ZZZ', html: errCard });
+          }
+        }
+
+        // 按 Root CA -> Intermediate CA -> 终端证书 排序
+        const order = { 'Root CA': 1, 'Intermediate CA': 2, '终端证书': 3 };
+        certHtml.sort((a, b) => (order[a.role] || 9) - (order[b.role] || 9));
+
+        certBox.innerHTML = certHtml.length ? certHtml.map(x => x.html).join('') : '<p class="meta">未在 /pki/ 目录下发现证书文件。</p>';
+        crlBox.innerHTML = crlHtml.length ? crlHtml.join('') : '<p class="meta">未在 /pki/ 目录下发现 CRL 文件。</p>';
+        tsBox.innerHTML = renderTsSummary(manifest);
+      } catch (err) {
+        updatedEl.textContent = '加载失败';
+        certBox.innerHTML = `<p class="meta">加载失败：${esc(err.message)}（请确认 Cloudflare Pages 构建命令已生成 pki/manifest.json）</p>`;
+        crlBox.innerHTML = '';
+        tsBox.innerHTML = '';
+      }
+    }
+
+    init();
+  </script>
+</body>
+</html>
