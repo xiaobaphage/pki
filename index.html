@@ -193,6 +193,8 @@
         id="updated-at">正在加载清单...</span></div>
   </header>
 
+  <div id="https-banner" class="notice" style="display:none; border-color: var(--warn);"></div>
+
   <div class="notice">
     <strong>认证业务声明（CPS）摘要：</strong>本仓库用于分发 <code>xiaobaphage</code>
     个人私有公钥基础设施（PKI）的根证书、中间颁发机构证书及证书吊销列表（CRL），仅限个人代码签名、S/MIME 电子邮件数字签名及内部服务认证使用，不对外提供商业信任担保。
@@ -449,6 +451,13 @@
     }
 
     async function init() {
+      if (location.protocol === 'http:' && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
+        const banner = document.getElementById('https-banner');
+        const httpsUrl = `https://${location.host}${location.pathname}${location.search}${location.hash}`;
+        banner.innerHTML = `<strong>安全提示：</strong>当前正通过明文 HTTP 访问本页面（HTTP 端点仅用于兼容证书 AIA / CRL 吊销列表自动检索）。建议切换到 <a href="${esc(httpsUrl)}">HTTPS 安全连接</a> 浏览。`;
+        banner.style.display = 'block';
+      }
+
       const certBox = document.getElementById('cert-list');
       const crlBox = document.getElementById('crl-list');
       const tsBox = document.getElementById('ts-summary');
