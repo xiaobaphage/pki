@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-11-26 15:24:21 +08:00",
-  "releaseTag": "2026-11-26.7",
+  "updatedAt": "2026-11-26 16:11:57 +08:00",
+  "releaseTag": "2026-11-26.8",
   "files": [
     {
       "name": "xiaobaphage_emailinterca.cer",
@@ -46,7 +46,7 @@
       "name": "xiaobaphage_emailinterca.crl",
       "type": "crl",
       "url": "./pki/xiaobaphage_emailinterca.crl",
-      "size": 573,
+      "size": 650,
       "timestamps": [
         {
           "tsa": "digicert",
@@ -60,9 +60,9 @@
           "tsa": "sectigo",
           "label": "Sectigo",
           "tsrUrl": "./pki/timestamps/xiaobaphage_emailinterca.crl.sectigo.tsr",
-          "tsrSize": 6636,
+          "tsrSize": 6635,
           "tsqUrl": "./pki/timestamps/xiaobaphage_emailinterca.crl.sectigo.tsq",
-          "tsqSize": 70
+          "tsqSize": 69
         },
         {
           "tsa": "freetsa",
@@ -70,15 +70,15 @@
           "tsrUrl": "./pki/timestamps/xiaobaphage_emailinterca.crl.freetsa.tsr",
           "tsrSize": 4644,
           "tsqUrl": "./pki/timestamps/xiaobaphage_emailinterca.crl.freetsa.tsq",
-          "tsqSize": 70
+          "tsqSize": 69
         },
         {
           "tsa": "globalsign",
           "label": "GlobalSign",
           "tsrUrl": "./pki/timestamps/xiaobaphage_emailinterca.crl.globalsign.tsr",
-          "tsrSize": 7660,
+          "tsrSize": 7661,
           "tsqUrl": "./pki/timestamps/xiaobaphage_emailinterca.crl.globalsign.tsq",
-          "tsqSize": 69
+          "tsqSize": 70
         }
       ]
     },
@@ -212,7 +212,7 @@
         "tsa": "digicert",
         "label": "DigiCert",
         "tsrUrl": "./pki/timestamps/SHA256SUMS.txt.digicert.tsr",
-        "tsrSize": 6006,
+        "tsrSize": 6007,
         "tsqUrl": "./pki/timestamps/SHA256SUMS.txt.digicert.tsq",
         "tsqSize": 69
       },
@@ -220,17 +220,17 @@
         "tsa": "sectigo",
         "label": "Sectigo",
         "tsrUrl": "./pki/timestamps/SHA256SUMS.txt.sectigo.tsr",
-        "tsrSize": 6636,
+        "tsrSize": 6635,
         "tsqUrl": "./pki/timestamps/SHA256SUMS.txt.sectigo.tsq",
-        "tsqSize": 70
+        "tsqSize": 69
       },
       {
         "tsa": "freetsa",
         "label": "FreeTSA",
         "tsrUrl": "./pki/timestamps/SHA256SUMS.txt.freetsa.tsr",
-        "tsrSize": 4643,
+        "tsrSize": 4644,
         "tsqUrl": "./pki/timestamps/SHA256SUMS.txt.freetsa.tsq",
-        "tsqSize": 69
+        "tsqSize": 70
       },
       {
         "tsa": "globalsign",
